@@ -1,0 +1,9 @@
+{
+    "name": "css-cache-thief",
+    "version": "1.0.0",
+    "description": "CSS-based data exfiltration POC",
+    "main": "attacker-server.js",
+    "scripts": {
+        "start": "node attacker-server.js"
+    }
+}
