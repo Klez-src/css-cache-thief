@@ -315,29 +315,6 @@
 
         }
 
-        setTimeout(() => {
-
-            const username = document.querySelector('input[name="username"]');
-            const password = document.querySelector('input[name="password"]');
-            const secret = document.querySelector('input[name="secret"]');
-
-            if (username) username.value = 'admin';
-            if (password) password.value = 'superSecret123';
-            if (secret) secret.value = 'fluffy';
-
-            [username, password, secret].forEach(input => {
-                if (input) {
-                    input.dispatchEvent(new Event('input', { bubbles: true }));
-                }
-            });
-
-            const entry = document.createElement('div');
-            entry.style.color = '#00ccff';
-            entry.textContent = '[' + new Date().toLocaleTimeString() + '] Demo started - watching for CSS exfiltration';
-            logDisplay.appendChild(entry);
-
-        }, 1000);
-
         document.querySelectorAll('input').forEach(input => {
             input.addEventListener('input', function() {
                 const entry = document.createElement('div');
