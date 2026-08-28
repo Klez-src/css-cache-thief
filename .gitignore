@@ -1,0 +1,4 @@
+node_modules/
+exfiltrated.log
+.DS_Store
+*.log
