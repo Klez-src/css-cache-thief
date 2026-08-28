@@ -2,7 +2,7 @@
 
 Proof of concept showing how CSS can steal form data.
 
-![CSS Cache Thief Demo](ezgif-6ea37f49458c72c3.gif)
+![CSS Cache Thief Demo](docs/ezgif-6ea37f49458c72c3.gif)
 
 ## What it does
 
